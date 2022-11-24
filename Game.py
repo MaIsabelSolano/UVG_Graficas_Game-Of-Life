@@ -19,19 +19,34 @@ class Game(object):
         _, _, self.width, self.height = screen.get_rect()
         self.screen = screen
 
-        cells_x = int(self.width / 10)
-        cells_y = int(self.width / 10)
+        self.cells_x = int(self.width / 10) # amount of cells on x axis
+        self.cells_y = int(self.width / 10) # amount of cells on y axis
 
-        self.cells = [[False for i in range(cells_y)] for x in range(cells_x)]
+        self.cells_width = int(self.width / self.cells_x)
+        self.cells_heigth = int(self.height / self.cells_x)
+
+        self.cells = [[False for i in range(self.cells_y)] for x in range(self.cells_x)]
 
         self.load_inital_game(filename)
+        self.render_cells()
 
 
     def point(self, x, y):
-        self.screen.set_at((x, y), WHITE)
+        self.screen.set_at((y, x), WHITE)
 
     def draw_cell(self, x, y):
-        0
+        for i in range(self.cells_width):
+            for j in range(self.cells_heigth):
+                self.point(
+                    int(i + x*self.cells_width),
+                    int(j + y*self.cells_heigth)
+                    )
+
+    def render_cells(self):
+        for i in range(len(self.cells)):
+            for j in range(len(self.cells)):
+                if self.cells[i][j]:
+                    self.draw_cell(i, j)
 
     def load_inital_game(self, filename):
         info = []
@@ -40,7 +55,6 @@ class Game(object):
             for line in f.readlines():
                 info.append(list(line))
 
-
         for i in range(len(info)):
             for j in range(len(info[i])):
                 if info[i][j] == '1':
@@ -48,6 +62,11 @@ class Game(object):
                 if info[i][j] == '0':
                     self.cells[i][j] = False
                 # else ignore
+
+    def iteration(self):
+        for x in range(len(self.cells)):
+            for y in range(len(self.cells[x])):
+                0
                     
 
 
@@ -59,8 +78,7 @@ running = True
 while running:
 
     screen.fill(BLACK)
-
-    
+    g.render_cells()
 
     pygame.display.flip()
     
