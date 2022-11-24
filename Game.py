@@ -12,6 +12,7 @@ import time
 # Important data
 WHITE = (255, 255, 255)
 BLACK = (  0,   0,   0)
+GRAY  = ( 25,  25,  25)
 
 # Game class
 class Game(object):
@@ -23,7 +24,7 @@ class Game(object):
         self.cells_y = int(self.width / 10) # amount of cells on y axis
 
         self.cells_width = int(self.width / self.cells_x)
-        self.cells_heigth = int(self.height / self.cells_x)
+        self.cells_height = int(self.height / self.cells_x)
 
         self.cells = [[False for i in range(self.cells_y)] for x in range(self.cells_x)]
 
@@ -31,22 +32,34 @@ class Game(object):
         self.render_cells()
 
 
-    def point(self, x, y):
-        self.screen.set_at((y, x), WHITE)
+    def point(self, x, y, c = WHITE):
+        self.screen.set_at((y, x), c)
 
     def draw_cell(self, x, y):
         for i in range(self.cells_width):
-            for j in range(self.cells_heigth):
+            for j in range(self.cells_height):
                 self.point(
                     int(i + x*self.cells_width),
-                    int(j + y*self.cells_heigth)
+                    int(j + y*self.cells_height)
                     )
 
     def render_cells(self):
+        # cells
         for i in range(len(self.cells)):
             for j in range(len(self.cells)):
                 if self.cells[i][j]:
                     self.draw_cell(i, j)
+
+        # grid
+        for i in range(self.width):
+            if i%self.cells_width == 0:
+                for j in range(self.height):
+                    self.point(j, i, GRAY)
+        for i in range(self.height):
+            if i%self.cells_height == 0:
+                for j in range(self.width):
+                    self.point(i, j, GRAY)
+                
 
     def load_inital_game(self, filename):
         info = []
