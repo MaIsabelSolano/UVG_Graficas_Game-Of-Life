@@ -76,11 +76,75 @@ class Game(object):
                     self.cells[i][j] = False
                 # else ignore
 
+    def get_neighbours(self, x, y):
+        n = 0
+        n += self.try_neighbour(x - 1, y - 1)
+        n += self.try_neighbour(    x, y - 1)
+        n += self.try_neighbour(x + 1, y - 1)
+        n += self.try_neighbour(x - 1, y)
+        n += self.try_neighbour(x + 1, y)
+        n += self.try_neighbour(x - 1, y + 1)
+        n += self.try_neighbour(    x, y + 1)
+        n += self.try_neighbour(x + 1, y + 1)
+        return n
+        
+
+    def try_neighbour(self, x, y):
+        try:
+            if self.cells[x][y]:
+                return 1
+            else:
+                return 0
+        except IndexError:
+            return 0
+            
+
     def iteration(self):
+        # check all the cells
+
+        # rules:
+        # Any live cell with fewer than two live neighbours dies, as if by underpopulation
+        # Any live cell with two or three live neighbours lives on to the next generation
+        # Any live cell with more than three live neighbours dies, as if by overpopulation
+        # Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction
+
+        # temp
+        cells_temp = [[False for i in range(self.cells_y)] for x in range(self.cells_x)]
+
         for x in range(len(self.cells)):
             for y in range(len(self.cells[x])):
-                0
+                # get amount neighbours
+                n = self.get_neighbours(x, y)
+
+                # determine if alive of dead
+                if self.cells[x][y]:
+                    # alive
+                    if n > 2:
+                        # Dies of underpopulation
+                        cells_temp[x][y] = False
                     
+                    if 2 <= n <= 3:
+                        # lives
+                        cells_temp[x][y] = True
+
+                    if n > 3:
+                        # Dies of overpopulation
+                        cells_temp[x][y] = False
+
+                else:
+                    # dead
+                    if n == 3:
+                        # comes to live
+                        cells_temp[x][y] = True
+
+                    else:
+                        # stays dead
+                        cells_temp[x][y] = False
+
+        # Overwrite the cells with the newest iteration
+        for x in range(len(self.cells)):
+            for y in range(len(self.cells[x])):
+                self.cells[x][y] = cells_temp[x][y]
 
 
 pygame.init()
@@ -93,9 +157,10 @@ while running:
     screen.fill(BLACK)
     g.render_cells()
 
+    time.sleep(0.5)
+    g.iteration()
+
     pygame.display.flip()
-    
-    time.sleep(2)
 
     for event in pygame.event.get():
         if (event.type == pygame.QUIT):
