@@ -20,7 +20,7 @@ Este juego consiste en 4 reglas:
 400px x 400px Life: <br>
 ![life1](https://user-images.githubusercontent.com/60373842/203758773-181d2c49-cec2-4a81-800a-a42d517e5846.png)
 
-Entrada para la primera generación en el archivo: <br>
+Entrada para la primera generación en el archivo [first_gen.txt](https://github.com/MaIsabelSolano/UVG_Graficas_Game-Of-Life/blob/master/first_gen.txt): <br>
 ![life_firstgen](https://user-images.githubusercontent.com/60373842/203759259-a73fe8ac-f3e5-4f05-93fe-29c322129dfa.png)
 
 ## Tecnologías
